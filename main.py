@@ -162,3 +162,22 @@ def generate_response(history, query, btn):
         
         # Yield the updated history and an empty string
         yield history, ''
+
+
+def render_file(file):
+    global N
+    
+    # Open the PDF document using fitz
+    doc = fitz.open(file.name)
+    
+    # Get the specific page to render
+    page = doc[N]
+    
+    # Render the page as a PNG image with a resolution of 300 DPI
+    pix = page.get_pixmap(matrix=fitz.Matrix(300/72, 300/72))
+    
+    # Create an Image object from the rendered pixel data
+    image = Image.frombytes('RGB', [pix.width, pix.height], pix.samples)
+    
+    # Return the rendered image
+    return image
