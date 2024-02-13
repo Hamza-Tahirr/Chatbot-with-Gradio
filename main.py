@@ -134,3 +134,31 @@ def process_file(file):
                                                   pdfsearch.as_retriever(search_kwargs={"k": 1}),
                                                   return_source_documents=True,)
     return chain
+
+def generate_response(history, query, btn):
+    global COUNT, N, chat_history
+    
+    # Check if a PDF file is uploaded
+    if not btn:
+        raise gr.Error(message='Upload a PDF')
+    
+    # Initialize the conversation chain only once
+    if COUNT == 0:
+        chain = process_file(btn)
+        COUNT += 1
+    
+    # Generate a response using the conversation chain
+    result = chain({"question": query, 'chat_history':chat_history}, return_only_outputs=True)
+    
+    # Update the chat history with the query and its corresponding answer
+    chat_history += [(query, result["answer"])]
+    
+    # Retrieve the page number from the source document
+    N = list(result['source_documents'][0])[1][1]['page']
+
+    # Append each character of the answer to the last message in the history
+    for char in result['answer']:
+        history[-1][-1] += char
+        
+        # Yield the updated history and an empty string
+        yield history, ''
