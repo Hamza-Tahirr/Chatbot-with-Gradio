@@ -181,3 +181,4 @@ def render_file(file):
     
     # Return the rendered image
     return image
+
