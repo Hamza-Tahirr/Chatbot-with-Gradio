@@ -101,3 +101,8 @@ with gr.Blocks() as demo:
         inputs=[btn],
         outputs=[show_img]
     )
+
+enable_box = gr.Textbox.update(value=None,placeholder= 'Upload your OpenAI API key',
+                               interactive=True)
+disable_box = gr.Textbox.update(value = 'OpenAI API key is Set',interactive=False)
+
