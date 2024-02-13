@@ -106,3 +106,9 @@ enable_box = gr.Textbox.update(value=None,placeholder= 'Upload your OpenAI API k
                                interactive=True)
 disable_box = gr.Textbox.update(value = 'OpenAI API key is Set',interactive=False)
 
+def set_apikey(api_key):
+    os.environ['OPENAI_API_KEY'] = api_key
+    return disable_box
+    
+def enable_api_box():
+    return enable_box
