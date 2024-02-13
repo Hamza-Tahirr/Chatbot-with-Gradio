@@ -112,3 +112,25 @@ def set_apikey(api_key):
     
 def enable_api_box():
     return enable_box
+
+def process_file(file):
+    # raise an error if API key is not provided
+    if 'OPENAI_API_KEY' not in os.environ:
+        raise gr.Error('Upload your OpenAI API key')
+    
+    # Load the PDF file using PyPDFLoader
+    loader = PyPDFLoader(file.name) 
+    documents = loader.load()
+    
+    # Initialize OpenAIEmbeddings for text embeddings
+    embeddings = OpenAIEmbeddings()
+    
+    # Create a ConversationalRetrievalChain with ChatOpenAI language model
+    # and PDF search retriever
+    pdfsearch = Chroma.from_documents(documents, embeddings,)
+
+    chain = ConversationalRetrievalChain.from_llm(ChatOpenAI(temperature=0.3), 
+                                                  retriever=
+                                                  pdfsearch.as_retriever(search_kwargs={"k": 1}),
+                                                  return_source_documents=True,)
+    return chain
